@@ -25,13 +25,17 @@ func main() {
 
 	app := iris.Default()
 
-	party := app.Party("/user")
-	{
-		party.Get("/", cntr.AllUsers)
-		party.Get("/{id:string}", cntr.GetByID)
-		party.Post("/", cntr.Login)
-		party.Post("/", cntr.Signup)
-	}
+	app.PartyFunc("/type", func(t iris.Party){
+		t.Get("/", cntr.GetAllUserTypes)
+		t.Post("/", cntr.AddUserType)
+	})
+
+	app.PartyFunc("/user", func(u iris.Party){
+		u.Get("/", cntr.AllUsers)
+		u.Get("/{id:string}", cntr.GetByID)
+		u.Post("/login", cntr.Login)
+		u.Post("/signup", cntr.Signup)
+	})
 	
 	app.Run(iris.Addr(fmt.Sprintf(":%d", conf.Port)))
 }

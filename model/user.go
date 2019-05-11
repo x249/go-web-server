@@ -6,9 +6,10 @@ import (
 
 //User ...
 type User struct {
-	ID           bson.ObjectId `bson:"id" json:"id"`
-	NickName     string        `bson:"nick_name" json:"nick_name"`
-	Phone        string        `bson:"phone" json:"phone"`
-	PasswordHash []byte        `bson:"hash" json:"hash"`
+	ID           bson.ObjectId `bson:"id,omitempty" json:"id"`
+	Type         bson.ObjectId `bson:"type,omitempty" json:"type"`
+	NickName     string        `bson:"nick_name,omitempty" json:"nick_name"`
+	Phone        string        `bson:"phone,omitempty" json:"phone"`
+	PasswordHash string        `bson:"hash,omitempty" json:"hash"`
 	Active       bool          `bson:"active" json:"active"`
 }
