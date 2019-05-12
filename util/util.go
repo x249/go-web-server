@@ -19,6 +19,7 @@ const (
 	movieNamePattern     = "^[a-zA-Z- 0-9]{2,25}$"
 	theaterNamePattern   = "^[a-zA-Z 0-9]{1,25}$"
 	descriptionPattern   = "^[a-zA-Z 0-9]{25,250}$"
+	movieCommentPattern  = "^[a-zA-Z ]{1,}&"
 )
 
 //GeneratePasswordHash ...
@@ -102,6 +103,15 @@ func ValidateDescription(desc string) bool {
 		panic(err)
 	}
 	return matcher.MatchString(desc)
+}
+
+//ValidateMovieComment ...
+func ValidateMovieComment(comment string) bool {
+	matcher, err := regexp.Compile(movieCommentPattern)
+	if err != nil {
+		panic(err)
+	}
+	return matcher.MatchString(comment)
 }
 
 //ValidateUserData ...

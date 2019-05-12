@@ -20,4 +20,5 @@ type UserTicker struct {
 	MovieTicket bson.ObjectId `bson:"movie_ticker" json:"movie_ticket"`
 	User        bson.ObjectId `bson:"user" json:"user"`
 	BuyDate     string        `bson:"buy_date" json:"buy_date"`
+	Scanned     bool          `bson:"scanned" json:"scanned"`
 }
