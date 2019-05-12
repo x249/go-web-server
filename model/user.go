@@ -4,6 +4,12 @@ import (
 	"github.com/globalsign/mgo/bson"
 )
 
+//UserType ...
+type UserType struct {
+	ID   bson.ObjectId `bson:"id,omitempty" json:"id"`
+	Type string        `bson:"type,omitempty" json:"type"`
+}
+
 //User ...
 type User struct {
 	ID           bson.ObjectId `bson:"id,omitempty" json:"id"`

@@ -31,7 +31,23 @@ const (
 	UserTypeCollection = "user_types"
 	//UserCollection ...
 	UserCollection = "users"
+	//MovieCategory ...
+	MovieCategory = "movie_category"
 )
+
+//EnsureUniqueIndex ...
+func (d *DB) EnsureUniqueIndex(collection string, indexes []string, data interface{}) error {
+	for _, key := range indexes {
+		index := mgo.Index{
+			Key:    []string{key},
+			Unique: true,
+		}
+		if err := d.C(collection).EnsureIndex(index); err != nil {
+			return err
+		}
+	}
+	return d.C(collection).Insert(&data)
+}
 
 //NewUser ...
 func (d *DB) NewUser(user model.User) error {
@@ -39,16 +55,7 @@ func (d *DB) NewUser(user model.User) error {
 	user.PasswordHash = util.GeneratePasswordHash(user.PasswordHash)
 	user.Phone = "+249" + user.Phone
 	user.Active = false
-	for _, key := range []string{"nick_name", "phone"} {
-		index := mgo.Index{
-			Key:    []string{key},
-			Unique: true,
-		}
-		if err := d.C(UserCollection).EnsureIndex(index); err != nil {
-			return err
-		}
-	}
-	return d.C(UserCollection).Insert(&user)
+	return d.EnsureUniqueIndex(UserCollection, []string{"nick_name", "phone"}, user)
 }
 
 //CheckUser ...
@@ -81,16 +88,7 @@ func (d *DB) GetUserByID(ID bson.ObjectId) (model.User, error) {
 //NewUserType ...
 func (d *DB) NewUserType(userType model.UserType) error {
 	userType.ID = bson.NewObjectId()
-	for _, key := range []string{"type"} {
-		index := mgo.Index{
-			Key:    []string{key},
-			Unique: true,
-		}
-		if err := d.C(UserTypeCollection).EnsureIndex(index); err != nil {
-			return err
-		}
-	}
-	return d.C(UserTypeCollection).Insert(&userType)
+	return d.EnsureUniqueIndex(UserTypeCollection, []string{"type"}, userType)
 }
 
 //GetUserTypes ...
@@ -98,4 +96,10 @@ func (d *DB) GetUserTypes() ([]model.UserType, error) {
 	var userTypes []model.UserType
 	err := d.C(UserTypeCollection).Find(bson.M{}).All(&userTypes)
 	return userTypes, err
+}
+
+//NewMovieCategory ...
+func (d *DB) NewMovieCategory(category model.MovieCategory) error {
+	category.ID = bson.NewObjectId()
+	return d.EnsureUniqueIndex(MovieCategory, []string{"name"}, category)
 }
